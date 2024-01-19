@@ -5483,7 +5483,8 @@ svg.svgicon {
 }
 
 .area .node.widget {
-    z-index: auto
+    z-index: auto;
+    text-align: right;
 }
 
 .area .node.section {

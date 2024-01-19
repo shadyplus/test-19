@@ -2339,34 +2339,39 @@
 <h1 style="text-align: center;">
   لإضافة تعليق 
 </h1>
-    <div >
+    
+    </div><div  style="display: block;">
 
       <!-- add comment -->
        <!-- محتوى صفحة الهبوط -->
       
-       <div id="comments-section">
-        <!-- <h2>أضف تعليق </h2> -->
-        <div id="comments-list">
-          <!-- عرض التعليقات الموجودة بالفعل -->
-          <!-- يمكنك استخدام لغة البرمجة لجلب التعليقات من قاعدة البيانات أو أي مكان آخر -->
-        </div>
       
-        <!-- نموذج إضافة تعليق -->
-        <form id="comment-form">
-          <label for="name">الاسم:</label>
-          <input type="text" id="name" name="name" required>
-      
-          <label for="comment">التعليق:</label>
-          <textarea id="comment" name="comment" required></textarea>
-      
-          <label for="image">صورتك:</label>
-          <input type="file" id="image" name="image" accept="image/*" >
-      
-          <button  type="button" onclick="addComment()">أضف تعليقك</button>
-        </form>
-      </div>
-      </div>
-    </div></div>
+  <div id="comments-section">
+    <h2>التعليقات</h2>
+    <div id="comments-list">
+      <!-- عرض التعليقات الموجودة بالفعل -->
+      <!-- يمكنك استخدام لغة البرمجة لجلب التعليقات من قاعدة البيانات أو أي مكان آخر -->
+    </div>
+
+    <!-- نموذج إضافة تعليق -->
+    <form id="comment-form">
+      <label for="name">الاسم:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="comment">التعليق:</label>
+      <textarea id="comment" name="comment" required></textarea>
+
+      <label for="user-image">صورتك الشخصية:</label>
+      <input type="file" id="user-image" name="user-image" accept="image/*" required>
+
+      <label for="product-image">صورة المنتج في يدك:</label>
+      <input type="file" id="product-image" name="product-image" accept="image/*" required>
+
+      <button type="button" onclick="addComment()">أضف تعليقك</button>
+    </form>
+  </div>
+
+      </div></div>
 </div></div></div></div></div>
     <div class="col" style="position: relative; max-width: 100% ;">
         <div class="cont"></div></div></div></div></div>
@@ -2445,40 +2450,53 @@
     <div class="node section section-helper"></div>
   <!-- <script type="text/javascript" src="//s.lpcdn.site/assets/3.7/vendors-sync.js?v=1659202759"></script> -->
   <!-- <script type='application/javascript'>creatium._async = {"modals":[],"cuts":[]};</script> -->
-      <script>
-  function addComment() {
-  // جمع القيم من النموذج
+     <script>
+      function addComment() {
   var name = document.getElementById('name').value;
-  var comment = document.getElementById('comment').value;
-  var imageInput = document.getElementById('image');
+  var commentText = document.getElementById('comment').value;
+  var userImageInput = document.getElementById('user-image');
+  var productImageInput = document.getElementById('product-image');
 
-  // قراءة محتوى الصورة باستخدام FileReader
-  var reader = new FileReader();
-  reader.onload = function (e) {
-    var image = e.target.result;
+  var userImageReader = new FileReader();
+  userImageReader.onload = function (e) {
+    var userImage = e.target.result;
 
-    // إنشاء عنصر تعليق جديد
-    var newComment = document.createElement('div');
-    newComment.className = 'comment';
+    var productImageReader = new FileReader();
+    productImageReader.onload = function (e) {
+      var productImage = e.target.result;
 
-   
+      var newComment = document.createElement('div');
+      newComment.className = 'comment';
 
-    // إضافة التعليق الجديد إلى قائمة التعليقات
-    document.getElementById('comments-list').appendChild(newComment);
- // إضافة محتوى التعليق
- newComment.innerHTML = '<img src="' + image + '" alt="' + name + '"><p><strong>' + name + ':</strong> ' + comment + '</p>';
-    // مسح قيم النموذج
-   
-    document.getElementById('comment').value = '';
-    document.getElementById('name').value = '';
-    imageInput.value = ''; // إعادة تعيين حقل الصورة للسماح باختيار نفس الصورة مرة أخرى
+      // إضافة التعليق والصورتين إلى العنصر الجديد
+      newComment.innerHTML = `
+  
+
+  <img src="${userImage}" alt="${name}" class="user-image">
+  <div class="comment-details">
+    <p><strong>${name}:</strong> ${commentText}</p>
+  </div>
+  <img src="${productImage}" alt="Product" class="product-image hand"> <!-- إضافة الكلاس hand هنا -->`
+;
+
+      document.getElementById('comments-list').appendChild(newComment);
+
+      // إعادة تعيين قيم النموذج
+      document.getElementById('name').value = '';
+      document.getElementById('comment').value = '';
+      userImageInput.value = '';
+      productImageInput.value = '';
+    };
+
+    // قراءة صورة المنتج
+    productImageReader.readAsDataURL(productImageInput.files[0]);
   };
 
-  // قراءة الصورة المحددة
-  reader.readAsDataURL(imageInput.files[0]);
+  // قراءة صورة المعلق
+  userImageReader.readAsDataURL(userImageInput.files[0]);
 }
 
-      </script>
+     </script>
       <style>
         #comments-list {
   margin-bottom: 20px;
@@ -2492,7 +2510,7 @@
 .comment img {
   max-width: 100%;
   border-radius: 50%;
-  float: right; /* أضفت هذا لتحديد موقع الصورة على اليمين */
+  
   margin-left: 10px; /* هذا لتضاف مسافة بين الصورة ونص التعليق */
   max-width: 100%;
     border-radius: 50%;
@@ -2540,6 +2558,11 @@ button {
     padding-bottom: 14px;
     font-size: 16px;
     color: rgb(255, 255, 255)!important;
+}
+.hand {
+  max-width: 100% !important;
+    width: 301px !important;
+    border-radius: 1px !important;
 }
 
       </style>
